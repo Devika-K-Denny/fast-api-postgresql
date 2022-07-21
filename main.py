@@ -1,12 +1,16 @@
 from cgi import print_exception
-from fastapi import FastAPI,status,HTTPException
+from fastapi import FastAPI,status,HTTPException,Request,Depends
 from  pydantic import BaseModel
 from typing import Optional,List
 from database import SessionLocal
+from sqlalchemy.orm import Session
+from fastapi.templating import Jinja2Templates
 import models
-#import psycopg2
+
 
 app=FastAPI()
+
+templates=Jinja2Templates(directory="templates")
 
 class Item(BaseModel):
     id:int
@@ -19,6 +23,29 @@ class Item(BaseModel):
         orm_mode=True 
         
 db=SessionLocal()
+
+def get_db1():
+    try:
+        db1=SessionLocal()
+        yield db1
+    finally:
+        db1.close()
+
+
+@app.get("/")
+def home(request: Request, db: Session= Depends(get_db1)):
+    item_to_get=db.query(models.Item).all()
+    print(item_to_get)
+    return templates.TemplateResponse("home.html" , {
+        "request": request,
+        "item": item_to_get
+    })
+
+@app.post('/stock')
+def create_stock():
+    return {"Code": "Sucess",
+            "Message": "Stock Created"
+            }
 
 @app.get('/items',response_model=List[Item],status_code=200)
 def get_all_items():

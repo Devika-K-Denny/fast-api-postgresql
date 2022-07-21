@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="ui input">
+    <input type="text" placeholder="Id">
+</div>
+
+<div class="ui input">
+    <input type="text" placeholder="name">
+  </div>
+
+<div class="ui checkbox">
+    <input type="checkbox" name="example">
+    <label>on_offer</label>
+  </div>
+
+<div class="ui checkbox">
+    <input type="checkbox" name="example">
+    <label>price above 20</label>
+  </div>
+
+  <button class="ui button primary">
+    Filter
+  </button>
+  
+<table class="ui celled table">
+    <thead>
+      <tr><th>Id</th>
+      <th>name</th>
+      <th>Description</th>
+      <th>price</th>
+      <th>on_offer</th>
+    </tr></thead>
+    <tbody>
+        {% for items in Item %}
+      <tr>
+        <td>{{Item.id}}</td>
+        <td>{{Item.name}}</td>
+        <td>{{Item.description}}</td>
+        <td>{{Item.price}}</td>
+        <td>{{Item.on_offer}}</td>
+      </tr>
+        {% endfor %}
+     
+    </tbody>
+  </table>
+
+{% endblock %}
